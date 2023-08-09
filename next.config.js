@@ -1,4 +1,12 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {}
+const nextConfig = {
+    images: {
+        domains: [
+            "www.whitmorerarebooks.com",
+            "res.cloudinary.com",
+            "tailwindui.com",
+        ],
+    },
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;
