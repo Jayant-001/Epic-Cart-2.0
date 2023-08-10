@@ -8,13 +8,14 @@ An Ecommerce website build on Next.js framework.
 
 Create you personalized online store for free with Epic Cart. Zero maintenance and brokerage fee.
 
+
 ## Tech Stack
 
-**Client:** React.js, Next.js, TailwindCSS
+**Client:** React.js, Next.js, React Query, TailwindCSS
 
 **Server:** Node
 
-**Database:** MySQL server (Aws RDS)
+**Database:** MySQL (Relational Database)
 
 **DB cloud provider:** Amazon Relational Database Service ( AWS ), 
 
@@ -55,7 +56,7 @@ To run this project, you will need to add the following environment variables to
 
 ## Authors
 
-- Designed and build by [@Jayant-001](https://www.github.com/Jayant-001)
+- Designed and developed by [@Jayant-001](https://www.github.com/Jayant-001)
 
 
 ## API Reference
