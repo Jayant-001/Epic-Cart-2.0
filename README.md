@@ -17,7 +17,7 @@ Create you personalized online store for free with Epic Cart. Zero maintenance a
 
 **Database:** MySQL (Relational Database)
 
-**DB cloud provider:** Amazon Relational Database Service ( AWS ), 
+**Cloud DB provider:** Amazon Relational Database Service ( AWS )
 
 **Web hosting:** Vercel
 
