@@ -6,6 +6,9 @@ export async function POST(req) {
     try {
         const { name, email, password } = await req.json();
 
+        // console.log(name, email, password)
+        // return NextResponse.json({ user: "user signuped" }, { status: 200 });
+
         const existUser = await query(
             "select * from user where user_email = ?",
             [email]
@@ -21,13 +24,11 @@ export async function POST(req) {
         const salt = await bcryptjs.genSalt(10);
         const hashedPassword = await bcryptjs.hash(password, salt);
 
-        console.log(hashedPassword)
-
         const q =
             "INSERT INTO user (user_name, user_email, password) VALUES (?, ?, ?)";
         const res = await query(q, [name, email, hashedPassword]);
 
-        return NextResponse.json({ user: res }, { status: 200 });
+        return NextResponse.json({ success: true }, { status: 200 });
     } catch (error) {
         console.log(error);
         return NextResponse.json({ error: error.message }, { status: 500 });

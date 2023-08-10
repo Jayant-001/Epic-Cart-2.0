@@ -10,6 +10,8 @@ const AddProductPage = ({ params }) => {
     // const queryClient = useQueryClient();
     // const mounted = useRef(true);
 
+    console.log(storeId)
+
     const [product, setProduct] = useState({
         name: "",
         description: "",

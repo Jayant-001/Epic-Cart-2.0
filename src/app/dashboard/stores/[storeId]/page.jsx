@@ -39,8 +39,13 @@ const StoreDetailsPage = ({ params }) => {
     //     },
     // });
 
-    const isLoading = false;
-    const isError = false, error = false;
+    const {data, isLoading, isError, error} = useQuery({
+        queryKey: [],
+        queryFn: async () => {
+            return await axios.get(`/api/dashboard/store/${storeId}`)
+        }
+    })
+
     const styles = "w-full text-center text-lg md:text-2xl my-10";
 
     if (isLoading) {
@@ -149,7 +154,7 @@ const StoreDetailsPage = ({ params }) => {
                 products={products}
             />
             {/* <StoreOrdersList orders={storeData.orders} /> */}
-            <UpdateStoreForm storeData={demoStoreData} />
+            <UpdateStoreForm storeId={storeId} storeData={demoStoreData} />
         </div>
     );
 };
@@ -161,7 +166,7 @@ const StoreAddProduct = ({ id }) => {
                 Add more products
             </h3>
             <Link
-                href={`/account/dashboard/stores/${id}/addProduct`}
+                href={`/dashboard/stores/${id}/addProduct`}
                 className="flex items-center justify-center gap-x-2 py-2 px-4 text-white font-medium bg-gray-800 duration-150 hover:bg-gray-700 active:bg-gray-900 rounded-lg md:inline-flex"
             >
                 Add now

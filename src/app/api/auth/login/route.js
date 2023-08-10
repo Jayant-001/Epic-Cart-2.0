@@ -32,8 +32,8 @@ export async function POST(req) {
 
         // create token
         const tokenData = {
-            id: existUser[0].id,
-            name: existUser[0].name,
+            id: existUser[0].user_id,
+            name: existUser[0].user_name,
             password: existUser[0].password,
         };
 
@@ -46,7 +46,10 @@ export async function POST(req) {
             message: "Login successfully",
         });
 
-        response.cookies.set("token", token, { httpOnly: true });
+        response.cookies.set("token", token, {
+            maxAge: 24 * 60 * 60,
+            httpOnly: true,
+        });
 
         return response;
     } catch (error) {

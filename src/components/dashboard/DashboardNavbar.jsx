@@ -12,17 +12,17 @@ const DashboardNavbar = () => {
     const links = [
         {
             title: "Stores",
-            url: "/account/dashboard/stores",
+            url: "/dashboard/stores",
             icon: <FaStore />,
         },
         {
             title: "Orders",
-            url: "/account/dashboard/orders",
+            url: "/dashboard/orders",
             icon: <BsFillCartCheckFill />,
         },
         {
             title: "Products",
-            url: "/account/dashboard/products",
+            url: "/dashboard/products",
             icon: <BsFillWalletFill />,
         },
         

@@ -4,13 +4,15 @@ import axios from "axios";
 import { useState } from "react";
 // import { toast } from "react-hot-toast";
 
-const UpdateStoreForm = ({ storeData }) => {
+const UpdateStoreForm = ({ storeData, storeId }) => {
     const queryClient = useQueryClient();
 
     const [store, setStore] = useState({
         title: storeData.title,
         desc: storeData.desc,
     });
+
+    console.log(storeId)
 
     // const createStoreQuery = useMutation({
     //     mutationFn: async (data) => {

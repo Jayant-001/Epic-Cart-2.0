@@ -1,12 +1,42 @@
 "use client";
 
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
 import Link from "next/link";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 const Navbar = () => {
     const [showMenu, setShowMenu] = useState(false);
     const [showProfile, setShowProfile] = useState(false);
     const [searchText, setSearchText] = useState("");
+    const queryClient = useQueryClient();
+
+    const [isUserAuthenticated, setIsUserAuthenticated] = useState(false);
+
+    const verifyUserQuery = useQuery({
+        queryKey: ["home", "verify"],
+        queryFn: async () => {
+            return await axios.get("/api/auth/verify");
+        },
+        onSuccess: () => {
+            setIsUserAuthenticated(true);
+        },
+        onError: () => {
+            setIsUserAuthenticated(false);
+        },
+    });
+
+    const logoutMutation = useMutation({
+        mutationFn: async () => {
+            return await axios.get('/api/auth/logout');
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["home", "verify"] })
+            toast("Session end");
+            router.push("/");
+        }
+    })
 
     const navLinks = [
         {
@@ -25,7 +55,7 @@ const Navbar = () => {
     const profileLinks = [
         {
             name: "Dashboard",
-            url: "/account/dashboard",
+            url: "dashboard",
         },
         {
             name: "Account",
@@ -36,11 +66,12 @@ const Navbar = () => {
             name: "Cart",
             url: "/account/cart",
         },
-        {
-            name: "Logout",
-            url: "/logout",
-        },
     ];
+
+    const handleLogout = (e) => {
+        e.preventDefault();
+        logoutMutation.mutate();
+    };
 
     const handleSearch = (e) => {
         e.preventDefault();
@@ -160,74 +191,93 @@ const Navbar = () => {
                 </div>
 
                 {/* <!-- Right elements --> */}
-                <div className="relative flex items-center">
-                    {/* <!-- Cart Icon --> */}
-                    <Link
-                        className="mr-4 text-neutral-600 transition duration-200 hover:text-neutral-700 hover:ease-in-out focus:text-neutral-700 disabled:text-black/30 motion-reduce:transition-none dark:text-neutral-200 dark:hover:text-neutral-300 dark:focus:text-neutral-300 [&.active]:text-black/90 dark:[&.active]:text-neutral-400"
-                        href="/account/cart"
-                    >
-                        <span className="[&>svg]:w-5">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 24 24"
-                                fill="currentColor"
-                                className="h-5 w-5"
+                {isUserAuthenticated ? (
+                    <div className="relative flex items-center">
+                        {/* <!-- Cart Icon --> */}
+                        <Link
+                            className="mr-4 text-neutral-600 transition duration-200 hover:text-neutral-700 hover:ease-in-out focus:text-neutral-700 disabled:text-black/30 motion-reduce:transition-none dark:text-neutral-200 dark:hover:text-neutral-300 dark:focus:text-neutral-300 [&.active]:text-black/90 dark:[&.active]:text-neutral-400"
+                            href="/account/cart"
+                        >
+                            <span className="[&>svg]:w-5">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24"
+                                    fill="currentColor"
+                                    className="h-5 w-5"
+                                >
+                                    <path d="M2.25 2.25a.75.75 0 000 1.5h1.386c.17 0 .318.114.362.278l2.558 9.592a3.752 3.752 0 00-2.806 3.63c0 .414.336.75.75.75h15.75a.75.75 0 000-1.5H5.378A2.25 2.25 0 017.5 15h11.218a.75.75 0 00.674-.421 60.358 60.358 0 002.96-7.228.75.75 0 00-.525-.965A60.864 60.864 0 005.68 4.509l-.232-.867A1.875 1.875 0 003.636 2.25H2.25zM3.75 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zM16.5 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0z" />
+                                </svg>
+                            </span>
+                            <span className="absolute bg-red-600  -mt-6 ml-3 rounded-full bg-danger px-[0.35em] py-[0.15em] text-[0.6rem] font-bold leading-none text-white">
+                                1
+                            </span>
+                        </Link>
+
+                        {/*  <!-- Container with two dropdown menus --> */}
+
+                        {/*  <!-- Second dropdown container --> */}
+                        <div className="relative" data-te-dropdown-ref>
+                            {/* {/* <!-- Second dropdown trigger --> */}
+                            <div
+                                className="hidden-arrow flex items-center whitespace-nowrap transition duration-150 ease-in-out motion-reduce:transition-none"
+                                role="button"
+                                data-te-dropdown-toggle-ref
+                                aria-expanded="false"
+                                onClick={(e) => setShowProfile((prev) => !prev)}
                             >
-                                <path d="M2.25 2.25a.75.75 0 000 1.5h1.386c.17 0 .318.114.362.278l2.558 9.592a3.752 3.752 0 00-2.806 3.63c0 .414.336.75.75.75h15.75a.75.75 0 000-1.5H5.378A2.25 2.25 0 017.5 15h11.218a.75.75 0 00.674-.421 60.358 60.358 0 002.96-7.228.75.75 0 00-.525-.965A60.864 60.864 0 005.68 4.509l-.232-.867A1.875 1.875 0 003.636 2.25H2.25zM3.75 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zM16.5 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0z" />
-                            </svg>
-                        </span>
-                        <span className="absolute bg-red-600  -mt-6 ml-3 rounded-full bg-danger px-[0.35em] py-[0.15em] text-[0.6rem] font-bold leading-none text-white">
-                            1
-                        </span>
-                    </Link>
+                                {/* <!-- User avatar --> */}
+                                <img
+                                    src="https://tecdn.b-cdn.net/img/new/avatars/2.jpg"
+                                    className="rounded-full"
+                                    style={{ height: "30px", width: "30px" }}
+                                    alt=""
+                                    loading="lazy"
+                                />
+                            </div>
 
-                    {/* {/* <!-- Container with two dropdown menus --> */}
+                            {/* <!-- Second dropdown menu --> */}
+                            <ul
+                                className={`absolute left-auto right-0 z-[1000] float-left m-0 mt-1 ${
+                                    showProfile ? "" : "hidden"
+                                } min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg dark:bg-neutral-700 [&[data-te-dropdown-show]]:block`}
+                                aria-labelledby="dropdownMenuButton2"
+                                data-te-dropdown-menu-ref
+                            >
+                                {/* {/* <!-- Second dropdown menu items --> */}
 
-                    {/* {/* <!-- Second dropdown container --> */}
-                    <div className="relative" data-te-dropdown-ref>
-                        {/* {/* <!-- Second dropdown trigger --> */}
-                        <div
-                            className="hidden-arrow flex items-center whitespace-nowrap transition duration-150 ease-in-out motion-reduce:transition-none"
-                            role="button"
-                            data-te-dropdown-toggle-ref
-                            aria-expanded="false"
-                            onClick={(e) => setShowProfile((prev) => !prev)}
-                        >
-                            {/* {/* <!-- User avatar --> */}
-                            <img
-                                src="https://tecdn.b-cdn.net/img/new/avatars/2.jpg"
-                                className="rounded-full"
-                                style={{ height: "30px", width: "30px" }}
-                                alt=""
-                                loading="lazy"
-                            />
+                                {profileLinks.map((link, id) => {
+                                    return (
+                                        <li key={id} onClick={(e) => setShowProfile((prev) => !prev)}>
+                                            <Link
+                                                className="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-white/30"
+                                                href={link.url}
+                                                data-te-dropdown-item-ref
+                                            >
+                                                {link.name}
+                                            </Link>
+                                        </li>
+                                    );
+                                })}
+                                <li>
+                                    <p
+                                        onClick={handleLogout}
+                                        className="block w-full cursor-pointer whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-white/30"
+                                        data-te-dropdown-item-ref
+                                    >
+                                        Logout
+                                    </p>
+                                </li>
+                            </ul>
                         </div>
-                        {/* {/* <!-- Second dropdown menu --> */}
-                        <ul
-                            className={`absolute left-auto right-0 z-[1000] float-left m-0 mt-1 ${
-                                showProfile ? "" : "hidden"
-                            } min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg dark:bg-neutral-700 [&[data-te-dropdown-show]]:block`}
-                            aria-labelledby="dropdownMenuButton2"
-                            data-te-dropdown-menu-ref
-                        >
-                            {/* {/* <!-- Second dropdown menu items --> */}
-
-                            {profileLinks.map((link, id) => {
-                                return (
-                                    <li key={id}>
-                                        <a
-                                            className="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-white/30"
-                                            href={link.url}
-                                            data-te-dropdown-item-ref
-                                        >
-                                            {link.name}
-                                        </a>
-                                    </li>
-                                );
-                            })}
-                        </ul>
                     </div>
-                </div>
+                ) : (
+                    <Link
+                        className="mr-2 px-2 py-1 border rounded shadow"
+                        href="/auth/login"
+                    >
+                        Login
+                    </Link>
+                )}
             </div>
         </nav>
     );
