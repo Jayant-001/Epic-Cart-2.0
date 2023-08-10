@@ -6,9 +6,21 @@
 
 An Ecommerce website build on Next.js framework.
 
-Create you online store for free with Epic Cart.
+Create you personalized online store for free with Epic Cart. Zero maintenance and brokerage fee.
 
-A place where user can purchase and sell there products by creating personalized stores.
+## Tech Stack
+
+**Client:** React.js, Next.js, TailwindCSS
+
+**Server:** Node
+
+**Database:** MySQL server (Aws RDS)
+
+**DB cloud provider:** Amazon Relational Database Service ( AWS ), 
+
+**Web hosting:** Vercel
+
+
 ## Installation
 
 Install epic-cart-2.0 with npm
