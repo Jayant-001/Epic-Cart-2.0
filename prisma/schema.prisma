@@ -1,0 +1,53 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model category {
+  category_id   Int       @id @default(autoincrement())
+  category_name String?   @db.VarChar(255)
+  product       product[]
+}
+
+model product {
+  product_id   Int       @id @default(autoincrement())
+  product_name String?   @db.VarChar(255)
+  product_desc String?   @db.VarChar(255)
+  store_id     Int?
+  user_id      Int?
+  quantity     Int?      @default(1)
+  price        Int?
+  image        String?   @db.VarChar(255)
+  category_id  Int?
+  store        store?    @relation(fields: [store_id], references: [store_id], onDelete: NoAction, onUpdate: NoAction, map: "product_ibfk_1")
+  user         user?     @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "product_ibfk_2")
+  category     category? @relation(fields: [category_id], references: [category_id], onDelete: NoAction, onUpdate: NoAction, map: "product_ibfk_3")
+
+  @@index([category_id], map: "category_id")
+  @@index([store_id], map: "store_id")
+  @@index([user_id], map: "user_id")
+}
+
+model store {
+  store_id   Int       @id @default(autoincrement())
+  store_name String?   @db.VarChar(255)
+  store_desc String?   @db.VarChar(255)
+  user_id    Int?
+  product    product[]
+  user       user?     @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "store_ibfk_1")
+
+  @@index([user_id], map: "user_id")
+}
+
+model user {
+  user_id    Int       @id @default(autoincrement())
+  user_name  String?   @db.VarChar(255)
+  user_email String?   @unique(map: "user_email") @db.VarChar(50)
+  password   String?   @db.VarChar(255)
+  product    product[]
+  store      store[]
+}

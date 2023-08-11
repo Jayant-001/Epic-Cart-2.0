@@ -30,6 +30,7 @@ const LoginPage = () => {
                 toast.error("Incorrect password");
             else toast.error("Something went wrong");
         },
+
     });
 
     useEffect(() => {

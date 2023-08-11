@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
-export async function middleware(request) {
+export function middleware(request) {
+
     const path = request.nextUrl.pathname;
     const authPaths = path === "/auth/login" || path === "/auth/signup";
     const privatePaths = path.startsWith("/account") || path.startsWith("/dashboard");
@@ -10,6 +11,7 @@ export async function middleware(request) {
     if (authPaths && token) {
         return NextResponse.redirect(new URL("/", request.nextUrl));
     }
+
     if (privatePaths && !token) {
         return NextResponse.redirect(new URL("/auth/login", request.nextUrl));
     }
