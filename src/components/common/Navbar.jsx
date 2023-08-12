@@ -3,6 +3,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
@@ -11,6 +12,7 @@ const Navbar = () => {
     const [showProfile, setShowProfile] = useState(false);
     const [searchText, setSearchText] = useState("");
     const queryClient = useQueryClient();
+    const router = useRouter();
 
     const [isUserAuthenticated, setIsUserAuthenticated] = useState(false);
 

@@ -1,16 +1,21 @@
-import { query } from "@/config/db";
 import { NextResponse } from "next/server";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
+import prisma from "../../../../../prisma";
 
 export async function POST(req) {
     try {
         const { email, password } = await req.json();
-        const existUser = await query(
-            "SELECT * FROM user WHERE user_email = ?",
-            [email]
-        );
-        if (existUser.length < 1) {
+        // const existUser = await query(
+        //     "SELECT * FROM user WHERE user_email = ?",
+        //     [email]
+        // );
+
+        const existUser = await prisma.user.findUnique({
+            where: { email },
+        });
+
+        if (!existUser) {
             return NextResponse.json(
                 { error: "User does not exist" },
                 { status: 404 }
@@ -20,8 +25,10 @@ export async function POST(req) {
         // check password
         const validPassword = await bcryptjs.compare(
             password,
-            existUser[0].password
+            existUser.password
         );
+
+        // return NextResponse.json({ user: "breakpoint" }, { status: 200 });
 
         if (!validPassword) {
             return NextResponse.json(
@@ -32,9 +39,9 @@ export async function POST(req) {
 
         // create token
         const tokenData = {
-            id: existUser[0].user_id,
-            name: existUser[0].user_name,
-            password: existUser[0].password,
+            id: existUser.id,
+            name: existUser.name,
+            password: existUser.password,
         };
 
         const token = jwt.sign(tokenData, process.env.JWT_SECRET, {

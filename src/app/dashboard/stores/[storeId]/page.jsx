@@ -2,13 +2,9 @@
 import StoreProductsList from "@/components/dashboard/stores/ProductsList";
 import UpdateStoreForm from "@/components/dashboard/stores/UpdateStoreForm";
 // import BreadCrumb from "@/components/BreadCrumb";
-// import StoreProductsList from "@/components/stores/ProductsList";
-// import UpdateStoreForm from "@/components/stores/UpdateStoreForm";
-// import StoreOrdersList from "@/components/stores/orders/StoreOrdersList";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Link from "next/link";
-import { toast } from "react-toastify";
 
 const StoreDetailsPage = ({ params }) => {
     const { storeId } = params;
@@ -39,12 +35,12 @@ const StoreDetailsPage = ({ params }) => {
     //     },
     // });
 
-    const {data, isLoading, isError, error} = useQuery({
+    const { data, isLoading, isError, error } = useQuery({
         queryKey: [],
         queryFn: async () => {
-            return await axios.get(`/api/dashboard/store/${storeId}`)
-        }
-    })
+            return await axios.get(`/api/dashboard/store/${storeId}`);
+        },
+    });
 
     const styles = "w-full text-center text-lg md:text-2xl my-10";
 
@@ -55,7 +51,8 @@ const StoreDetailsPage = ({ params }) => {
         return <h1 className={styles}>{error.message}</h1>;
     }
 
-    // console.log(data.data.store);
+    console.log(data.data.store);
+    const products = data.data.store.products;
     // const storeData = {
     //     storeId,
     //     title: data.data.store.title,
@@ -64,95 +61,93 @@ const StoreDetailsPage = ({ params }) => {
     // };
     // links.at(-1).title = storeData.title;
 
-        const demoStoreData = {
+    const demoStoreData = {
         storeId,
         title: "data.data.store.title",
         desc: "data.data.store.desc",
         orders: "data.data.store.orders",
     };
 
-    const products = [
-      {
-          _id: "64b8da47f0ef140b2606b692",
-          name: "Paint ",
-          description: "Paint is hello new",
-          price: 3322,
-          stock: 103,
-          seller: "Jaya tech for men",
-          images: [],
-          category: "men",
-          createdAt: "2023-07-20T06:55:03.832Z",
-          __v: 0,
-      },
-      {
-          _id: "64b8da7df0ef140b2606b699",
-          name: "Clothes 1 ",
-          description: "Clothes for women",
-          price: 3322,
-          stock: 103,
-          seller: "Momen store",
-          images: [],
-          category: "women",
-          createdAt: "2023-07-20T06:55:57.550Z",
-          __v: 0,
-      },
-      {
-          _id: "64b8da88f0ef140b2606b69b",
-          name: "Clothes 2",
-          description: "Clothes for women and ",
-          price: 332,
-          stock: 103,
-          seller: "Momen store",
-          images: [],
-          category: "women",
-          createdAt: "2023-07-20T06:56:08.051Z",
-          __v: 0,
-      },
-      {
-          _id: "64b8da8cf0ef140b2606b69d",
-          name: "Clothes 3",
-          description: "Clothes for women and ",
-          price: 332,
-          stock: 103,
-          seller: "Momen store",
-          images: [],
-          category: "women",
-          createdAt: "2023-07-20T06:56:12.051Z",
-          __v: 0,
-      },
-      {
-          _id: "64b8da88f0ef140b2606b69b",
-          name: "Clothes 2",
-          description: "Clothes for women and ",
-          price: 332,
-          stock: 103,
-          seller: "Momen store",
-          images: [],
-          category: "women",
-          createdAt: "2023-07-20T06:56:08.051Z",
-          __v: 0,
-      },
-      {
-          _id: "64b8da8cf0ef140b2606b69d",
-          name: "Clothes 3",
-          description: "Clothes for women and ",
-          price: 332,
-          stock: 103,
-          seller: "Momen store",
-          images: [],
-          category: "women",
-          createdAt: "2023-07-20T06:56:12.051Z",
-          __v: 0,
-      },
-  ];
+    const demoProducts = [
+        {
+            _id: "64b8da47f0ef140b2606b692",
+            name: "Paint ",
+            description: "Paint is hello new",
+            price: 3322,
+            stock: 103,
+            seller: "Jaya tech for men",
+            images: [],
+            category: "men",
+            createdAt: "2023-07-20T06:55:03.832Z",
+            __v: 0,
+        },
+        {
+            _id: "64b8da7df0ef140b2606b699",
+            name: "Clothes 1 ",
+            description: "Clothes for women",
+            price: 3322,
+            stock: 103,
+            seller: "Momen store",
+            images: [],
+            category: "women",
+            createdAt: "2023-07-20T06:55:57.550Z",
+            __v: 0,
+        },
+        {
+            _id: "64b8da88f0ef140b2606b69b",
+            name: "Clothes 2",
+            description: "Clothes for women and ",
+            price: 332,
+            stock: 103,
+            seller: "Momen store",
+            images: [],
+            category: "women",
+            createdAt: "2023-07-20T06:56:08.051Z",
+            __v: 0,
+        },
+        {
+            _id: "64b8da8cf0ef140b2606b69d",
+            name: "Clothes 3",
+            description: "Clothes for women and ",
+            price: 332,
+            stock: 103,
+            seller: "Momen store",
+            images: [],
+            category: "women",
+            createdAt: "2023-07-20T06:56:12.051Z",
+            __v: 0,
+        },
+        {
+            _id: "64b8da88f0ef140b2606b69b",
+            name: "Clothes 2",
+            description: "Clothes for women and ",
+            price: 332,
+            stock: 103,
+            seller: "Momen store",
+            images: [],
+            category: "women",
+            createdAt: "2023-07-20T06:56:08.051Z",
+            __v: 0,
+        },
+        {
+            _id: "64b8da8cf0ef140b2606b69d",
+            name: "Clothes 3",
+            description: "Clothes for women and ",
+            price: 332,
+            stock: 103,
+            seller: "Momen store",
+            images: [],
+            category: "women",
+            createdAt: "2023-07-20T06:56:12.051Z",
+            __v: 0,
+        },
+    ];
+    
     return (
         <div>
             {/* <BreadCrumb links={links} /> */}
             <StoreAddProduct id={storeId} />
-            <StoreProductsList
-                storeId={storeId}
-                products={products}
-            />
+            <StoreProductsList storeId={storeId} products={products} />
             {/* <StoreOrdersList orders={storeData.orders} /> */}
             <UpdateStoreForm storeId={storeId} storeData={demoStoreData} />
         </div>

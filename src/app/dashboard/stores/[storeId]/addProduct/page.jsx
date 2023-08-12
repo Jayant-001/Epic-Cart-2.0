@@ -1,30 +1,37 @@
 "use client";
-// import { useMutation, useQueryClient } from "@tanstack/react-query";
-// import axios from "axios";
-import { useEffect, useRef, useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
+import { useState } from "react";
 import { toast } from "react-toastify";
 import { BsCardImage } from "react-icons/bs";
 
+const imageUpload = async (data) => {
+    const res = await fetch(
+        `https://api.cloudinary.com/v1_1/jayant-cloud/image/upload`,
+        {
+            method: "POST",
+            body: data,
+        }
+    );
+    const imageData = await res.json();
+    return imageData.url;
+};
+
 const AddProductPage = ({ params }) => {
     const { storeId } = params;
-    // const queryClient = useQueryClient();
-    // const mounted = useRef(true);
+    const queryClient = useQueryClient();
 
-    console.log(storeId)
-
-    const [product, setProduct] = useState({
+    const [formData, setFormData] = useState({
         name: "",
         description: "",
         price: "",
-        stock: "",
+        quantity: "",
         storeId: storeId,
         category: "Others",
         address: "",
-        images: [],
     });
 
     const [image, setImage] = useState(null);
-    const [images, setImages] = useState([]);
 
     const options = [
         "Others",
@@ -36,120 +43,80 @@ const AddProductPage = ({ params }) => {
         "Kids",
     ];
 
-    // const addProductMutation = useMutation({
-    //     mutationFn: async (product) => {
-    //         return await axios.post(
-    //             `/api/account/stores/${storeId}/products`,
-    //             product
-    //         );
-    //     },
-    //     onSuccess: () => {
-    //         queryClient.invalidateQueries(["account", "stores", "products"]);
-    //         setProduct({
-    //             name: "",
-    //             description: "",
-    //             price: "",
-    //             stock: "",
-    //             storeId: storeId,
-    //             category: "Others",
-    //             address: "",
-    //             images: [],
-    //         });
-    //         setImages([]);
-    //         toast.success("Uploaded");
-    //     },
-    //     onError: (error) => {
-    //         toast.error(error.message);
-    //     },
-    // });
+    const addProductMutation = useMutation({
+        mutationFn: async (product) => {
+            return await axios.post(
+                `/api/dashboard/store/${storeId}/products`,
+                product
+            );
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries(["account", "stores", "products"]);
+            clear();
+            toast.success("Product added to store");
+        },
+        onError: (error) => {
+            toast.error(error.message);
+        },
+    });
 
-    // const uploadImage = (data) => {
-    //     axios
-    //         .post("https://api.cloudinary.com/v1_1/ddarryisr/upload", data)
-    //         .then((res) => {
-    //             // console.log(res.data);
-    //             const images = [];
-    //             images.push(res.data.secure_url);
-    //             setProduct({ ...product, images: images });
-    //             console.log(product);
-    //         })
-    //         .catch((err) => {
-    //             console.log(err);
-    //         });
-    // };
-
-    // const uploadImageMutation = useMutation({
-    //     mutationFn: async (data) => {
-    //         return await axios.post(
-    //             "https://api.cloudinary.com/v1_1/ddarryisr/upload",
-    //             data
-    //         );
-    //     },
-    //     onSuccess: (res) => {
-    //         const images = [res.data.secure_url];
-    //         setProduct({...product, 'images': images});
-    //     },
-    //     onError: () => {
-    //         toast.error("Image upload error");
-    //     },
-    // });
-
-    // useEffect(() => {
-    //     if (images.length > 0) {
-    //         setProduct({ ...product, images: images });
-    //         console.log(product);
-    //         // addProductMutation.mutate(product);
-    //     }
-    // }, [images]);
-
-    const handleClear = (e) => {
-        e.preventDefault();
-        setProduct({
+    const clear = () => {
+        setFormData({
             name: "",
             description: "",
             price: "",
-            stock: "",
+            quantity: "",
             storeId: storeId,
             category: "Others",
             address: "",
-            images: [],
         });
         setImage(null);
+    };
 
+    const handleClear = (e) => {
+        e.preventDefault();
+        clear();
         toast.error("Data cleared");
+    };
+
+    const handleInputChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const handleImageChange = (e) => {
+        e.preventDefault();
+        const image = e.target.files[0];
+
+        if (image.size > 2000000) {
+            toast.error("Image size limit 2 MB");
+            return;
+        }
+        
+        const data = new FormData();
+        data.append("file", image);
+        data.append("upload_preset", "epic_store_cloud");
+        setImage(data);
     };
 
     const handleUpload = async (e) => {
         e.preventDefault();
 
-        // if(product.images.length < 1) {
-        //     toast.error("Wait for image upload")
-        //     return;
-        // }
-        // addProductMutation.mutate(product);
+        const imageUrl = await imageUpload(image);
+        // const imageUrl = "";
+        const data = {
+            name: formData.name,
+            desc: formData.description,
+            price: parseInt(formData.price),
+            quantity: parseInt(formData.quantity),
+            store_id: storeId,
+            address: formData.address,
+            image: imageUrl,
+            category_id: "3bc680f0-2668-4f3a-a77a-247897a22ed4",
+        };
+
+        addProductMutation.mutate(data);
     };
 
-    const handleInputChange = (e) => {
-        setProduct({ ...product, [e.target.name]: e.target.value });
-    };
-
-    const handleImageChange = (e) => {
-        e.preventDefault();
-        // const image = e.target.files[0];
-
-        // if (image.size > 2000000) {
-        //     toast.error("Maximum image size is 2 MB");
-        //     return;
-        // }
-
-        // const data = new FormData();
-        // data.append("file", image);
-        // data.append("upload_preset", "epic_store_product_images");
-        // uploadImageMutation.mutate(data);
-
-        // setImage(image);
-    };
-    const isLoading = true;
     const styles = {
         inputBg: "bg-gray-700 text-slate-300",
     };
@@ -180,7 +147,7 @@ const AddProductPage = ({ params }) => {
                                         type="text"
                                         name="name"
                                         id="name"
-                                        value={product.name}
+                                        value={formData.name}
                                         onChange={handleInputChange}
                                         required
                                         className="block flex-1 border-0 outline-none bg-transparent py-1.5 px-2  placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
@@ -202,7 +169,7 @@ const AddProductPage = ({ params }) => {
                                     id="description"
                                     name="description"
                                     rows={3}
-                                    value={product.description}
+                                    value={formData.description}
                                     onChange={handleInputChange}
                                     placeholder="Product description"
                                     className="block w-full rounded-md outline-none border-0 py-1.5 px-2 bg-gray-950 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
@@ -221,7 +188,7 @@ const AddProductPage = ({ params }) => {
                                 <input
                                     type="number"
                                     name="price"
-                                    value={product.price}
+                                    value={formData.price}
                                     onChange={handleInputChange}
                                     id="price"
                                     required={true}
@@ -233,7 +200,7 @@ const AddProductPage = ({ params }) => {
 
                         <div className="sm:col-span-2">
                             <label
-                                htmlFor="stock"
+                                htmlFor="quantity"
                                 className="block text-sm font-medium leading-6 "
                             >
                                 Inventory
@@ -241,12 +208,12 @@ const AddProductPage = ({ params }) => {
                             <div className="mt-2">
                                 <input
                                     type="number"
-                                    name="stock"
-                                    value={product.stock}
+                                    name="quantity"
+                                    value={formData.quantity}
                                     onChange={handleInputChange}
-                                    id="stock"
+                                    id="quantity"
                                     required={true}
-                                    placeholder="Stock"
+                                    placeholder="quantity"
                                     className="block w-full rounded-md border-0 outline-none py-1.5 px-2 bg-transparent shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
                                 />
                             </div>
@@ -261,15 +228,15 @@ const AddProductPage = ({ params }) => {
                             </label>
                             <select
                                 onChange={(e) => {
-                                    setProduct({
-                                        ...product,
+                                    setFormData({
+                                        ...formData,
                                         [e.target.name]:
                                             e.target.value.toLowerCase(),
                                     });
                                 }}
                                 name="category"
                                 id="category"
-                                value={product.category}
+                                value={formData.category}
                                 className=" border border-gray-300 bg-transparent text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5    "
                             >
                                 {options.map((option, id) => (
@@ -295,7 +262,7 @@ const AddProductPage = ({ params }) => {
                                     type="text"
                                     name="address"
                                     id="address"
-                                    value={product.address}
+                                    value={formData.address}
                                     onChange={handleInputChange}
                                     required={true}
                                     className="block w-full rounded-md border-0 bg-transparent outline-none px-2 py-1.5 text-slate-200 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
@@ -316,12 +283,12 @@ const AddProductPage = ({ params }) => {
                                         className="mx-auto h-12 w-12 "
                                         aria-hidden="true"
                                     />
-                                    <div className="mt-4 flex text-sm leading-6text-slate-200">
+                                    <div className="mt-4 flex text-sm leading-6 text-slate-200">
                                         <label
                                             htmlFor="file-upload"
-                                            className="relative cursor-pointer rounded-md  font-semiboldtext-slate-200 focus-within:outline-none focus-within:ring-2 focus-within:ring-gray-600 focus-within:ring-offset-2 hover:text-gray-500"
+                                            className="relative cursor-pointer rounded-md  font-semibold text-slate-200 focus-within:outline-none focus-within:ring-2 focus-within:ring-gray-600 focus-within:ring-offset-2 hover:text-gray-500"
                                         >
-                                            <span>Select a file</span>
+                                            <span>Select a image</span>
                                             <input
                                                 onChange={handleImageChange}
                                                 id="file-upload"
@@ -348,7 +315,7 @@ const AddProductPage = ({ params }) => {
                 <button
                     onClick={handleClear}
                     type="button"
-                    className="text-sm font-semibold leading-6 text-gray-900"
+                    className="text-sm font-semibold leading-6"
                 >
                     Clear
                 </button>
@@ -356,7 +323,7 @@ const AddProductPage = ({ params }) => {
                     type="submit"
                     className="rounded-md bg-gray-600 px-3 py-2 text-sm font-semibold shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
                 >
-                    {isLoading || isLoading ? "Loading..." : "Upload"}
+                    {addProductMutation.isLoading ? "Loading..." : "Upload"}
                 </button>
             </div>
         </form>

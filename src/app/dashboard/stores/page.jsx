@@ -7,7 +7,9 @@ import { useState } from "react";
 import { FaStoreAlt } from "react-icons/fa";
 
 const DashboardStoresPage = () => {
+    
     const [stores, setStores] = useState([])
+
     const { data, isLoading, isError, error } = useQuery({
         queryKey: ["account", "dashboard", "stores"],
         queryFn: async () => {

@@ -1,12 +1,20 @@
 import { NextResponse } from "next/server"
+import prisma from "../../../../../../prisma";
 
 export async function GET(req, {params}) {
     try {
-
-        const {storeId} = await params;
         
-
-        return NextResponse.json({store: "", products: []}, {status: 200})
+        const {storeId} = await params;
+        const store = await prisma.store.findUnique({
+            where: {
+                id: storeId
+            },
+            include: {
+                products: true
+            }
+        })
+        
+        return NextResponse.json({store}, {status: 200})
         
     } catch (error) {
         console.log(error)

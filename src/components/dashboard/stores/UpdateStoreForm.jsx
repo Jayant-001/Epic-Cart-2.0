@@ -12,8 +12,6 @@ const UpdateStoreForm = ({ storeData, storeId }) => {
         desc: storeData.desc,
     });
 
-    console.log(storeId)
-
     // const createStoreQuery = useMutation({
     //     mutationFn: async (data) => {
     //         return await axios.patch(

@@ -1,6 +1,6 @@
 import { extractToken } from "@/app/utils/extractToken";
-import { query } from "@/config/db";
 import { NextResponse } from "next/server";
+import prisma from "../../../../../prisma";
 
 export async function GET(req) {
     try {
@@ -18,9 +18,14 @@ export async function GET(req) {
 
             return response;
         }
-        const q = "SELECT * FROM user WHERE user_id = ?";
-        const existingUser = await query(q, [userId]);
-        if (existingUser.length <= 0) {
+        // const q = "SELECT * FROM user WHERE user_id = ?";
+        // const existingUser = await query(q, [userId]);
+
+        const existingUser = await prisma.user.findUnique({
+            where: { id: userId },
+        });
+
+        if (!existingUser) {
             const response = NextResponse.json(
                 { success: false, message: "Session expired" },
                 { status: 401 }
