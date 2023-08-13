@@ -3,21 +3,15 @@ import StoresList from "@/components/dashboard/stores/StoreList";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Link from "next/link";
-import { useState } from "react";
 import { FaStoreAlt } from "react-icons/fa";
 
 const DashboardStoresPage = () => {
-    
-    const [stores, setStores] = useState([])
 
     const { data, isLoading, isError, error } = useQuery({
-        queryKey: ["account", "dashboard", "stores"],
+        queryKey: ["dashboard", "stores"],
         queryFn: async () => {
             return axios.get("/api/dashboard/store");
-        },
-        onSuccess: (data) => {
-            setStores(data.data.stores)
-        },
+        }
     });
 
     const demoStores = [
@@ -46,7 +40,7 @@ const DashboardStoresPage = () => {
     return (
         <div className="space-y-10">
             <CreateStore />
-            {stores.length < 1 ? <NoStores /> : isLoading ? <StoreLoading /> : <StoresList stores={stores} />}
+            {isLoading ? <StoreLoading /> : data.data.stores.length < 1 ? <NoStores /> : <StoresList stores={data.data.stores} />}
         </div>
     );
 };

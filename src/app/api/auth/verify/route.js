@@ -39,7 +39,7 @@ export async function GET(req) {
             return response;
         }
 
-        return NextResponse.json({ success: true }, { status: 200 });
+        return NextResponse.json({ user: existingUser }, { status: 200 });
     } catch (error) {
         console.log(error);
         return NextResponse.json({ error: error.message }, { status: 500 });

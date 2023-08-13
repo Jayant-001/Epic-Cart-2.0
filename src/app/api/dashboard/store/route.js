@@ -16,7 +16,7 @@ export async function GET(req) {
         return NextResponse.json({ stores }, { status: 200 });
     } catch (error) {
         console.log(error);
-        return NextResponse.json({ stores: [] }, { status: 200 });
+        return NextResponse.json({ error: error.message }, { status: 200 });
     }
 }
 
@@ -36,6 +36,6 @@ export async function POST(req) {
         return NextResponse.json({ success: true }, { status: 201 });
     } catch (error) {
         console.log(error);
-        return NextResponse.json({ stores: [] }, { status: 200 });
+        return NextResponse.json({ error: error.message }, { status: 200 });
     }
 }

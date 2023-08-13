@@ -1,44 +1,36 @@
 "use client";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { userContext } from "@/context/UserContext";
+import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { toast } from "react-toastify";
 
 const Navbar = () => {
     const [showMenu, setShowMenu] = useState(false);
     const [showProfile, setShowProfile] = useState(false);
     const [searchText, setSearchText] = useState("");
-    const queryClient = useQueryClient();
     const router = useRouter();
 
-    const [isUserAuthenticated, setIsUserAuthenticated] = useState(false);
-
-    const verifyUserQuery = useQuery({
-        queryKey: ["home", "verify"],
-        queryFn: async () => {
-            return await axios.get("/api/auth/verify");
-        },
-        onSuccess: () => {
-            setIsUserAuthenticated(true);
-        },
-        onError: () => {
-            setIsUserAuthenticated(false);
-        },
-    });
+    const { user, setUser } = useContext(userContext);
 
     const logoutMutation = useMutation({
         mutationFn: async () => {
-            return await axios.get('/api/auth/logout');
+            return await axios.get("/api/auth/logout");
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["home", "verify"] })
+            setShowProfile((prev) => !prev);
+            setUser({
+                id: null,
+                name: null,
+                email: null,
+            });
             toast("Session end");
             router.push("/");
-        }
-    })
+        },
+    });
 
     const navLinks = [
         {
@@ -193,7 +185,7 @@ const Navbar = () => {
                 </div>
 
                 {/* <!-- Right elements --> */}
-                {isUserAuthenticated ? (
+                {user.id ? (
                     <div className="relative flex items-center">
                         {/* <!-- Cart Icon --> */}
                         <Link
@@ -249,7 +241,12 @@ const Navbar = () => {
 
                                 {profileLinks.map((link, id) => {
                                     return (
-                                        <li key={id} onClick={(e) => setShowProfile((prev) => !prev)}>
+                                        <li
+                                            key={id}
+                                            onClick={(e) =>
+                                                setShowProfile((prev) => !prev)
+                                            }
+                                        >
                                             <Link
                                                 className="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-white/30"
                                                 href={link.url}

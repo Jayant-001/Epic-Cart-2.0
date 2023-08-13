@@ -1,26 +1,31 @@
 "use client";
+import { userContext } from "@/context/UserContext";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 const LoginPage = () => {
+    const { setUser } = useContext(userContext);
     const [formData, setFormData] = useState({
         email: "",
         password: "",
     });
     const [disableButton, setDisableButton] = useState(true);
     const router = useRouter();
-    const queryClient = useQueryClient();
 
     const loginMutation = useMutation({
         mutationFn: async (data) => {
             return await axios.post("/api/auth/login", data);
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["home", "verify"] })
+        onSuccess: ({ data }) => {
+            setUser({
+                id: data.user.id,
+                name: data.user.name,
+                email: data.user.email,
+            });
             toast("Redirecting...");
             router.push("/");
         },
@@ -30,7 +35,6 @@ const LoginPage = () => {
                 toast.error("Incorrect password");
             else toast.error("Something went wrong");
         },
-
     });
 
     useEffect(() => {

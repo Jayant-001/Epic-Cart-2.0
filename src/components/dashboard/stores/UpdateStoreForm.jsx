@@ -2,64 +2,57 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useState } from "react";
-// import { toast } from "react-hot-toast";
+import { toast } from "react-toastify";
 
-const UpdateStoreForm = ({ storeData, storeId }) => {
+const UpdateStoreForm = ({ storeData }) => {
     const queryClient = useQueryClient();
 
     const [store, setStore] = useState({
-        title: storeData.title,
+        name: storeData.name,
         desc: storeData.desc,
     });
 
-    // const createStoreQuery = useMutation({
-    //     mutationFn: async (data) => {
-    //         return await axios.patch(
-    //             `/api/account/stores/${storeData.storeId}`,
-    //             data
-    //         );
-    //     },
-    //     onSuccess: () => {
-    //         queryClient.invalidateQueries(["account", "stores"]);
-    //         queryClient.invalidateQueries(["account", "store", "details"])
-    //     },
-    // });
+    const updateStoreMutation = useMutation({
+        mutationFn: async (data) => {
+            return await axios.patch(
+                `/api/dashboard/store/${storeData.storeId}`,
+                data
+            );
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["dashboard", "stores"],
+            });
+            queryClient.invalidateQueries({
+                queryKey: ["dashboard", "store", "detail"],
+            });
+            toast.success("Store updated");
+        },
+    });
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // if (store.title.length < 3 || store.desc.length < 5) {
-        //     toast.error("Invalid data");
-        //     return;
-        // }
-
-        // const data = await createStoreQuery.mutateAsync({
-        //     title: store.title,
-        //     desc: store.desc,
-        // });
-
-        // if (data.status === 200) {
-        //     toast.success("Store updated");
-        // } else {
-        //     toast.error("Server is down");
-        // }
+        updateStoreMutation.mutate(store);
     };
     return (
         <div>
-            <h1 className="text-lg lg:text-2xl font-semibold ">Update Store details</h1>
+            <h1 className="text-lg lg:text-2xl font-semibold ">
+                Update Store details
+            </h1>
             <form className="my-5">
                 <div className="mb-2">
                     <label
-                        htmlFor="title"
+                        htmlFor="name"
                         className="block mb-2 text-base font-semibold text-gray-600"
                     >
-                        Store title
+                        Store name
                     </label>
                     <input
                         type="text"
-                        id="title"
-                        value={store.title}
-                        name="title"
+                        id="name"
+                        value={store.name}
+                        name="name"
                         onChange={(e) =>
                             setStore({
                                 ...store,
@@ -67,7 +60,7 @@ const UpdateStoreForm = ({ storeData, storeId }) => {
                             })
                         }
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="Store title"
+                        placeholder="Store name"
                         required
                     />
                 </div>

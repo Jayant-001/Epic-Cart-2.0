@@ -36,7 +36,7 @@ const StoreDetailsPage = ({ params }) => {
     // });
 
     const { data, isLoading, isError, error } = useQuery({
-        queryKey: [],
+        queryKey: ['dashboard', 'store', 'detail'],
         queryFn: async () => {
             return await axios.get(`/api/dashboard/store/${storeId}`);
         },
@@ -51,7 +51,6 @@ const StoreDetailsPage = ({ params }) => {
         return <h1 className={styles}>{error.message}</h1>;
     }
 
-    console.log(data.data.store);
     const products = data.data.store.products;
     // const storeData = {
     //     storeId,
@@ -67,6 +66,11 @@ const StoreDetailsPage = ({ params }) => {
         desc: "data.data.store.desc",
         orders: "data.data.store.orders",
     };
+    const storeData = {
+        storeId,
+        name: data.data.store.name,
+        desc: data.data.store.desc
+    }
 
     const demoProducts = [
         {
@@ -142,14 +146,13 @@ const StoreDetailsPage = ({ params }) => {
             __v: 0,
         },
     ];
-    
+
     return (
         <div>
             {/* <BreadCrumb links={links} /> */}
             <StoreAddProduct id={storeId} />
             <StoreProductsList storeId={storeId} products={products} />
-            {/* <StoreOrdersList orders={storeData.orders} /> */}
-            <UpdateStoreForm storeId={storeId} storeData={demoStoreData} />
+            <UpdateStoreForm storeData={storeData} />
         </div>
     );
 };

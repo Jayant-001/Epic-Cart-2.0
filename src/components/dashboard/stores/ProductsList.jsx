@@ -4,7 +4,6 @@ import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-// import { toast } from "react-hot-toast";
 import { FiXCircle } from "react-icons/fi";
 import { toast } from "react-toastify";
 
@@ -28,14 +27,14 @@ const StoreProductsList = ({ storeId, products }) => {
     );
 };
 
-const StoreProductItem = ({ storeId, product }) => {
+const StoreProductItem = ({ product }) => {
     const imageurl =
         "https://www.whitmorerarebooks.com/pictures/medium/2465.jpg";
     const queryClient = useQueryClient();
 
     // const productDeleteMutation = useMutation({
     //     mutationFn: async (id) =>
-    //         await axios.delete(`/api/account/stores/${storeId}/products`, {
+    //         await axios.delete(`/api/account/stores/${product.storeId}/products`, {
     //             data: { id },
     //         }),
     //     onSuccess: () => {
@@ -61,7 +60,7 @@ const StoreProductItem = ({ storeId, product }) => {
         <div className="px-5 py-2 flex items-center justify-between border-t">
             <div className="flex items-center relative">
                 <Image
-                    src={product?.image || imageurl}
+                    src={product.image || imageurl}
                     width={0}
                     alt="product image"
                     height={0}
