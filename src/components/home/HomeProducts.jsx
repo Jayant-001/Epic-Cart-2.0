@@ -18,35 +18,35 @@ const HomeProducts = () => {
 
     const products = [
         {
-            _id: 1,
+            id: 1,
             name: "prdocut 1",
             desc: "product desc",
             price: 2344,
             image: "",
         },
         {
-            _id: 2,
+            id: 2,
             name: "prdocut 2",
             desc: "product 2 desc",
             price: 2344,
             image: "",
         },
         {
-            _id: 3,
+            id: 3,
             name: "prdocut 3",
             desc: "product desc",
             price: 2344,
             image: "",
         },
         {
-            _id: 4,
+            id: 4,
             name: "prdocut 2",
             desc: "product 2 desc",
             price: 2344,
             image: "",
         },
         {
-            _id: 5,
+            id: 5,
             name: "prdocut 3",
             desc: "product desc",
             price: 2344,

@@ -33,17 +33,17 @@ const ProductDetail = ({ product }) => {
                     <img
                         alt="ecommerce"
                         className="lg:w-1/2 w-full object-cover object-center rounded border border-gray-200"
-                        src={product.image || imageurl}
+                        src={product?.image || imageurl}
                     />
                     <div className="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
                         <h1 className=" text-3xl title-font font-medium mb-1">
-                            {product.name}
+                            {product?.name}
                         </h1>
                         <h2 className="text-sm title-font text-slate-300 tracking-widest">
                             store{" "}
                             <span className="font-semibold text-blue-300 hover:underline">
-                                <Link href={`/store/${product.store.id}`}>
-                                    {product.store.name}
+                                <Link href={`/stores/${product?.store.id}`}>
+                                    {product?.store.name}
                                 </Link>
                             </span>
                         </h2>
@@ -148,18 +148,18 @@ const ProductDetail = ({ product }) => {
                             </span>
                         </div>
                         <p className="leading-relaxed">
-                            {product.desc}
+                            {product?.desc}
                         </p>
                         <div className=" mt-6 space-y-3 w-fit pb-5 border-b-2 border-gray-200 mb-5">
                             <div className="grid grid-cols-2">
                                 <h6 className="font-semibold text-lg">Category</h6>
-                                <p>{product.category.name}</p>
+                                <p>{product?.category.name}</p>
                             </div>
                             <div className="grid grid-cols-2">
                                 <h6 className="font-semibold text-lg">
                                     Seller
                                 </h6>
-                                <p>{product.store.name}</p>
+                                <p>{product?.store.name}</p>
                             </div>
                             <div className="grid grid-cols-2">
                                 <h6 className="font-semibold text-lg">Brand</h6>
@@ -167,12 +167,12 @@ const ProductDetail = ({ product }) => {
                             </div>
                             <div className="grid grid-cols-2">
                                 <h6 className="font-semibold text-lg">Stock</h6>
-                                <p>{product.quantity}</p>
+                                <p>{product?.quantity}</p>
                             </div>
                         </div>
                         <div className="flex">
                             <span className="title-font font-semibold text-2xl ">
-                                ₹{product.price}
+                                ₹{product?.price}
                             </span>
                             <button
                                 onClick={addToCart}

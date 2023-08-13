@@ -23,11 +23,11 @@ const ProductCard = ({ product }) => {
     const addToCart = async () => {};
 
     return (
-        <div key={product.id} className="group relative border rounded-lg ">
+        <div className="group relative border rounded-lg ">
             <div className="relative aspect-h-1 aspect-w-1 w-full  overflow-hidden rounded-md lg:aspect-none group-hover:opacity-75 h-48">
                 <Image
                     fill={true}
-                    src={product.image || demoImageUrl}
+                    src={product?.image || demoImageUrl}
                     alt="product image"
                     className="h-full w-full object-cover object-center lg:h-full lg:w-full"
                 />
