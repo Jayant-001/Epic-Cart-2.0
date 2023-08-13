@@ -1,11 +1,13 @@
 "use client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
 const UpdateStoreForm = ({ storeData }) => {
     const queryClient = useQueryClient();
+    const router = useRouter();
 
     const [store, setStore] = useState({
         name: storeData.name,
@@ -30,11 +32,36 @@ const UpdateStoreForm = ({ storeData }) => {
         },
     });
 
+    const deleteStoreMutation = useMutation({
+        mutationFn: async () => {
+            return await axios.delete(
+                `/api/dashboard/store/${storeData.storeId}`
+            );
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["dashboard", "stores"],
+            });
+            queryClient.invalidateQueries({
+                queryKey: ["dashboard", "store", "detail"],
+            });
+            toast.error("Store deleted");
+            router.back();
+        },
+    });
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         updateStoreMutation.mutate(store);
     };
+
+    const handleDelete = async (e) => {
+        e.preventDefault();
+
+        deleteStoreMutation.mutate();
+    };
+
     return (
         <div>
             <h1 className="text-lg lg:text-2xl font-semibold ">
@@ -86,13 +113,22 @@ const UpdateStoreForm = ({ storeData }) => {
                         placeholder="Store description"
                     ></textarea>
                 </div>
-                <button
-                    type="submit"
-                    onClick={handleSubmit}
-                    className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                >
-                    Update
-                </button>
+                <div className="flex gap-2">
+                    <button
+                        type="submit"
+                        onClick={handleSubmit}
+                        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                    >
+                        {updateStoreMutation.isLoading ? "Updating" : "Update"}
+                    </button>
+                    <button
+                        type="button"
+                        onClick={handleDelete}
+                        className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
+                    >
+                        { deleteStoreMutation.isLoading ? "Deleting" : "Delete"}
+                    </button>
+                </div>
             </form>
         </div>
     );

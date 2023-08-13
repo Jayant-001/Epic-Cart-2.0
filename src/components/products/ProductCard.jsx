@@ -23,8 +23,8 @@ const ProductCard = ({ product }) => {
     const addToCart = async () => {};
 
     return (
-        <div key={product._id} className="group relative border rounded-lg ">
-            <div className="relative aspect-h-1 aspect-w-1 w-full  overflow-hidden rounded-md lg:aspect-none group-hover:opacity-75 h-80">
+        <div key={product.id} className="group relative border rounded-lg ">
+            <div className="relative aspect-h-1 aspect-w-1 w-full  overflow-hidden rounded-md lg:aspect-none group-hover:opacity-75 h-48">
                 <Image
                     fill={true}
                     src={product.image || demoImageUrl}
@@ -38,7 +38,7 @@ const ProductCard = ({ product }) => {
                 <p className=" font-medium">₹{product.price}</p>
                 <div className="flex justify-evenly gap-2 w-full my-2">
                     <Link
-                        href={`/products/${product._id}`}
+                        href={`/products/${product.id}`}
                         className="text-sm flex items-center justify-center py-2 px-2 text-white font-medium bg-gray-800 duration-150 hover:bg-gray-700 active:bg-gray-900 rounded-lg w-full"
                     >
                         Preview
