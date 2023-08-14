@@ -96,8 +96,8 @@ Stores endpoints will be added soon
 To deploy this project run
 
 ```bash
-  build: "next build",
-  "start": "next start"
+  build: next build
+  start: next start
 ```
 
 
