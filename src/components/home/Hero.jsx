@@ -124,7 +124,7 @@ const HeroSection = () => {
                         </Link>
                     </div>
                     <a
-                        href="https://github.com/Jayant-001/Epic-Cart"
+                        href="https://github.com/Jayant-001/Epic-Cart-2.0"
                         target="_blank"
                         className="flex items-center justify-center gap-x-2 py-2 px-4  hover:text-gray-500 font-medium duration-150 active:bg-gray-100 border rounded-lg "
                     >
