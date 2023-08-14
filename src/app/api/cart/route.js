@@ -13,8 +13,8 @@ export async function GET(req) {
             include: {
                 products: {
                     include: {
-                        store: true
-                    }
+                        store: true,
+                    },
                 },
             },
         });
@@ -53,6 +53,27 @@ export async function POST(req) {
         });
 
         return NextResponse.json({ success: true }, { status: 201 });
+    } catch (error) {
+        console.log(error);
+        return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+}
+
+export async function PATCH(req) {
+    try {
+        const user_id = await extractToken(req);
+        const { productId } = await req.json();
+
+        const res = await prisma.cart.update({
+            where: { user_id },
+            data: {
+                products: {
+                    disconnect: { id: productId },
+                },
+            },
+        });
+
+        return NextResponse.json({ success: true }, { status: 200 });
     } catch (error) {
         console.log(error);
         return NextResponse.json({ error: error.message }, { status: 500 });

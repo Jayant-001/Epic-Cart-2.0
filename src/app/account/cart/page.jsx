@@ -1,10 +1,12 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import Link from "next/link";
+import { toast } from "react-toastify";
 
 const CartPage = () => {
+    const queryClient = useQueryClient();
     const products = [
         {
             id: "19826d5e-6440-4c7d-b986-19f84afc0d33",
@@ -25,17 +27,24 @@ const CartPage = () => {
         queryFn: async () => {
             return await axios.get("/api/cart");
         },
-        onSuccess: (res) => {
-            console.log(res.data);
-        },
         onError: (err) => {
             console.log(err);
         },
     });
 
-    const handleChange = (e) => {};
+    const removeProductMutation = useMutation({
+        mutationFn: async (payload) => {
+            return await axios.patch("/api/cart", payload);
+        },
+        onSuccess: () => {
+            toast.error("Removed from cart");
+            queryClient.invalidateQueries({ queryKey: ["account", "cart"] });
+        },
+    });
 
-    const handleCheckout = (e) => {};
+    const removeProduct = (productId) => {
+        removeProductMutation.mutate({ productId });
+    };
 
     return (
         <div className="container mx-auto mt-10 ">
@@ -98,12 +107,16 @@ const CartPage = () => {
                                                 <span className="text-red-500 text-xs">
                                                     {product?.store?.name}
                                                 </span>
-                                                <a
-                                                    href="#"
-                                                    className="font-semibold hover:text-red-500 text-gray-500 text-xs"
+                                                <p
+                                                    onClick={() =>
+                                                        removeProduct(
+                                                            product.id
+                                                        )
+                                                    }
+                                                    className="font-semibold cursor-pointer hover:text-red-500 text-gray-500 text-xs"
                                                 >
                                                     Remove
-                                                </a>
+                                                </p>
                                             </div>
                                         </div>
                                         <div className="flex justify-center w-1/5">
@@ -140,8 +153,8 @@ const CartPage = () => {
                         </>
                     )}
 
-                    <a
-                        href="#"
+                    <Link
+                        href="/products"
                         className="flex font-semibold text-indigo-600 text-sm mt-10"
                     >
                         <svg
@@ -151,7 +164,7 @@ const CartPage = () => {
                             <path d="M134.059 296H436c6.627 0 12-5.373 12-12v-56c0-6.627-5.373-12-12-12H134.059v-46.059c0-21.382-25.851-32.09-40.971-16.971L7.029 239.029c-9.373 9.373-9.373 24.569 0 33.941l86.059 86.059c15.119 15.119 40.971 4.411 40.971-16.971V296z" />
                         </svg>
                         Continue Shopping
-                    </a>
+                    </Link>
                 </div>
 
                 <div id="summary" className="w-full md:w-1/4 px-8 py-10">
@@ -160,9 +173,23 @@ const CartPage = () => {
                     </h1>
                     <div className="flex justify-between mt-10 mb-5">
                         <span className="font-semibold text-sm uppercase">
-                            Items 3
+                            Items {data ? data.data.cart.products.length : "0"}
                         </span>
-                        <span className="font-semibold text-sm">590$</span>
+                        <span className="font-semibold text-sm">
+                            $
+                            {data
+                                ? (() => {
+                                      let total = 0;
+                                      data.data.cart.products.forEach(
+                                          (product) => {
+                                              total += product.price;
+                                          }
+                                      );
+
+                                      return total;
+                                  })()
+                                : "$0"}
+                        </span>
                     </div>
                     <div>
                         <label className="font-medium inline-block mb-3 text-sm uppercase">
@@ -183,16 +210,20 @@ const CartPage = () => {
                             type="text"
                             id="promo"
                             placeholder="Enter your code"
-                            className="p-2 text-sm w-full"
+                            className="p-2 text-sm w-full text-black"
                         />
                     </div>
-                    <button className="bg-red-500 hover:bg-red-600 px-5 py-2 text-sm  uppercase">
+                    <button
+                        onClick={() => alert("Invalid code")}
+                        className="bg-red-500 hover:bg-red-600 px-5 py-2 text-sm  uppercase"
+                    >
                         Apply
                     </button>
                     <div className="border-t mt-8">
                         <div className="flex font-semibold justify-between py-6 text-sm uppercase">
                             <span>Total cost</span>
                             <span>
+                                $
                                 {data
                                     ? (() => {
                                           let total = 0;
@@ -201,18 +232,17 @@ const CartPage = () => {
                                                   total += product.price;
                                               }
                                           );
-
                                           return total;
                                       })()
                                     : "$0"}
                             </span>
                         </div>
-                        <button
-                            onClick={handleCheckout}
-                            className="bg-indigo-500 font-semibold hover:bg-indigo-600 py-3 text-sm uppercase w-full"
+                        <Link
+                            href="/"
+                            className="bg-indigo-500 font-semibold px-2 rounded shadow hover:bg-indigo-600 py-3 text-sm uppercase w-full"
                         >
                             Checkout
-                        </button>
+                        </Link>
                     </div>
                 </div>
             </div>
