@@ -96,7 +96,8 @@ Stores endpoints will be added soon
 To deploy this project run
 
 ```bash
-  npm run deploy
+  build: "next build",
+  "start": "next start"
 ```
 
 
