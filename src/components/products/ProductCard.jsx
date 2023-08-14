@@ -4,6 +4,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import Link from "next/link";
 import Image from "next/image";
+import { toast } from "react-toastify";
 
 const ProductCard = ({ product }) => {
     const demoImageUrl =
@@ -11,16 +12,21 @@ const ProductCard = ({ product }) => {
     const queryClient = useQueryClient();
 
     const addToCartMutation = useMutation({
-        mutationKey: ["cart", "add"],
         mutationFn: async (payload) => {
-            return await axios.post("/api/account/cart", payload);
+            return await axios.post("/api/cart", payload);
         },
         onSuccess: () => {
-            queryClient.invalidateQueries(["account", "cart"]);
+            toast.success("Added to cart");
+            queryClient.invalidateQueries({ queryKey: ["account", "cart"] });
+        },
+        onError: (err) => {
+            toast.err(err.message);
         },
     });
 
-    const addToCart = async () => {};
+    const addToCart = () => {
+        addToCartMutation.mutate({ productId: product.id });
+    };
 
     return (
         <div className="group relative border rounded-lg ">

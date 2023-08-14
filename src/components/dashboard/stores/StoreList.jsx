@@ -3,7 +3,7 @@ import Link from "next/link";
 
 const StoresList = ({ stores }) => {
     return (
-        <div className="w-full gap-5 justify-start px-auto flex flex-wrap">
+        <div className="w-full mx-auto gap-5 justify-start px-auto flex flex-wrap">
             {stores?.map((store) => (
                 <StoreCard key={store.id} store={store} />
             ))}
@@ -13,7 +13,7 @@ const StoresList = ({ stores }) => {
 
 const StoreCard = ({ store }) => {
     return (
-        <div className=" flex-shrink w-[45%] h-fit sm:w-[30%] lg:w-[22%] py-5 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+        <div className=" flex-shrink w-[45%] h-fit sm:w-[30%] lg:w-[22%] py-5 bg-white border border-gray-200 rounded-lg shadow dark:bg-[#2f2f2f] dark:border-gray-700">
             <div className="flex flex-col items-center">
                 <FaStoreAlt className="text-white w-10 h-10" />
                 <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">

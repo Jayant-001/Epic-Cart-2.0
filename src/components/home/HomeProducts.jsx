@@ -70,7 +70,7 @@ const HomeProducts = () => {
                     </button>
                 </Link>
             </div>
-            <div className="border rounded-lg">
+            <div className=" rounded-lg">
                 {isLoading ? (
                     <div className="min-h-[100px] flex justify-center items-center">
                         <h1 className="text-xl md:text-3xl tracking-widest font-semibold">

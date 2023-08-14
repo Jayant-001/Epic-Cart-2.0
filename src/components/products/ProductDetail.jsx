@@ -4,27 +4,30 @@ import { BsFillCartPlusFill } from "react-icons/bs";
 import { useRouter } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
+import { toast } from "react-toastify";
 
 const ProductDetail = ({ product }) => {
-    const router = useRouter();
     const queryClient = useQueryClient();
 
     const imageurl =
         "https://www.whitmorerarebooks.com/pictures/medium/2465.jpg";
 
     const addToCartMutation = useMutation({
-        mutationKey: ["cart", "add"],
         mutationFn: async (payload) => {
-            return await axios.post("/api/account/cart", payload);
+            return await axios.post("/api/cart", payload);
         },
         onSuccess: () => {
-            queryClient.invalidateQueries(["account", "cart"]);
+            toast.success("Added to cart");
+            queryClient.invalidateQueries({ queryKey: ["account", "cart"] });
+        },
+        onError: (err) => {
+            toast.err(err.message);
         },
     });
 
-    const addToCart = async () => {};
-
-    const onCheckout = async () => {};
+    const addToCart = () => {
+        addToCartMutation.mutate({ productId: product.id });
+    };
 
     return (
         <section className="body-font overflow-hidden">

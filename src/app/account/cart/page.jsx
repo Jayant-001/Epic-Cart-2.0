@@ -1,43 +1,41 @@
 "use client";
+
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import Link from "next/link";
+
 const CartPage = () => {
     const products = [
         {
-            name: "product 1",
-            storeName: "Store 1",
-            quantity: 38,
-            price: 3872,
-            image: "",
-        },
-        {
-            name: "Iphone 6s",
-            storeName: "Store 1",
-            quantity: 38,
-            price: 31872,
-            image: "",
-        },
-        {
-            name: "Macbook Air",
-            storeName: "Store 5",
-            quantity: 3,
-            price: 387222,
-            image: "",
-        },
-        {
-            name: "product 43",
-            storeName: "Santi store",
-            quantity: 383,
-            price: 38,
-            image: "",
+            id: "19826d5e-6440-4c7d-b986-19f84afc0d33",
+            name: "abc product",
+            desc: "this is abc product",
+            store_id: "a3598015-336d-477c-8e09-0b8305a87b51",
+            user_id: "a834706a-592e-419d-bc28-cdc6a825ed25",
+            quantity: 72,
+            price: 3883,
+            image: "http://res.cloudinary.com/jayant-cloud/image/upload/v1692028836/epic_store/python-essentials-cisco_x1bks0.png",
+            address: " lksdjf  sdklfj ",
+            category_id: "3bc680f0-2668-4f3a-a77a-247897a22ed4",
         },
     ];
 
-    const handleChange = (e) => {
+    const { data, isLoading, isError, err } = useQuery({
+        queryKey: ["account", "cart"],
+        queryFn: async () => {
+            return await axios.get("/api/cart");
+        },
+        onSuccess: (res) => {
+            console.log(res.data);
+        },
+        onError: (err) => {
+            console.log(err);
+        },
+    });
 
-    }
+    const handleChange = (e) => {};
 
-    const handleCheckout = (e) => {
-
-    }
+    const handleCheckout = (e) => {};
 
     return (
         <div className="container mx-auto mt-10 ">
@@ -49,81 +47,98 @@ const CartPage = () => {
                         </h1>
                         <h2 className="font-semibold text-2xl">3 Items</h2>
                     </div>
-                    <div className="flex mt-10 mb-5">
-                        <h3 className="font-semibold text-gray-600 text-xs uppercase w-2/5">
-                            Product Details
-                        </h3>
-                        <h3 className="font-semibold text-gray-600 text-xs uppercase w-1/5 text-center">
-                            Quantity
-                        </h3>
-                        <h3 className="font-semibold text-gray-600 text-xs uppercase w-1/5 text-center">
-                            Price
-                        </h3>
-                        <h3 className="font-semibold text-gray-600 text-xs uppercase w-1/5 text-center">
-                            Total
-                        </h3>
-                    </div>
 
-                    {products.map((product, id) => {
-                        return (
-                            <div
-                                key={id}
-                                className="flex items-center hover:bg-gray-800 -mx-8 px-6 py-5"
-                            >
-                                <div className="flex w-2/5">
-                                    <div className="w-20">
-                                        <img
-                                            className="h-24"
-                                            src="https://drive.google.com/uc?id=18KkAVkGFvaGNqPy2DIvTqmUH_nk39o3z"
-                                            alt=""
-                                        />
-                                    </div>
-                                    <div className="flex flex-col justify-between ml-4 flex-grow">
-                                        <span className="font-bold text-sm">
-                                            {product.name}
-                                        </span>
-                                        <span className="text-red-500 text-xs">
-                                            {product.storeName}
-                                        </span>
-                                        <a
-                                            href="#"
-                                            className="font-semibold hover:text-red-500 text-gray-500 text-xs"
-                                        >
-                                            Remove
-                                        </a>
-                                    </div>
-                                </div>
-                                <div className="flex justify-center w-1/5">
-                                    <svg
-                                        className="fill-current text-gray-600 w-3"
-                                        viewBox="0 0 448 512"
-                                    >
-                                        <path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" />
-                                    </svg>
-
-                                    <input
-                                        className="mx-2 border text-center w-8 bg-transparent"
-                                        type="text"
-                                        onChange={handleChange}
-                                        value={product.quantity}
-                                    />
-
-                                    <svg
-                                        className="fill-current text-gray-600 w-3"
-                                        viewBox="0 0 448 512"
-                                    >
-                                        <path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" />
-                                    </svg>
-                                </div>
-                                <span className="text-center w-1/5 font-semibold text-sm">
-                                    ${product.price}
-                                </span>
-                                <span className="text-center w-1/5 font-semibold text-sm">
-                                    ${product.price * product.quantity}
-                                </span>
+                    {isLoading ? (
+                        <h1 className="text-center mt-10 text-lg">
+                            Loading cart
+                        </h1>
+                    ) : data === null || isError ? (
+                        <h1 className="text-center mt-10 text-lg">
+                            No product found
+                        </h1>
+                    ) : (
+                        <>
+                            <div className="flex mt-10 mb-5">
+                                <h3 className="font-semibold text-gray-600 text-xs uppercase w-2/5">
+                                    Product Details
+                                </h3>
+                                <h3 className="font-semibold text-gray-600 text-xs uppercase w-1/5 text-center">
+                                    Quantity
+                                </h3>
+                                <h3 className="font-semibold text-gray-600 text-xs uppercase w-1/5 text-center">
+                                    Price
+                                </h3>
+                                <h3 className="font-semibold text-gray-600 text-xs uppercase w-1/5 text-center">
+                                    Total
+                                </h3>
                             </div>
-                        );
-                    })}
+
+                            {data.data.cart.products.map((product) => {
+                                return (
+                                    <div
+                                        key={product.id}
+                                        className="flex items-center hover:bg-gray-800 -mx-8 px-6 py-5"
+                                    >
+                                        <div className="flex w-2/5">
+                                            <div className="w-20">
+                                                <img
+                                                    className="h-24"
+                                                    src="https://drive.google.com/uc?id=18KkAVkGFvaGNqPy2DIvTqmUH_nk39o3z"
+                                                    alt=""
+                                                />
+                                            </div>
+                                            <div className="flex flex-col justify-between ml-4 flex-grow">
+                                                <span className="font-bold text-sm cursor-pointer">
+                                                    <Link
+                                                        href={`/products/${product.id}`}
+                                                    >
+                                                        {product.name}
+                                                    </Link>
+                                                </span>
+                                                <span className="text-red-500 text-xs">
+                                                    {product?.store?.name}
+                                                </span>
+                                                <a
+                                                    href="#"
+                                                    className="font-semibold hover:text-red-500 text-gray-500 text-xs"
+                                                >
+                                                    Remove
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div className="flex justify-center w-1/5">
+                                            <svg
+                                                className="fill-current text-gray-600 w-3"
+                                                viewBox="0 0 448 512"
+                                            >
+                                                <path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" />
+                                            </svg>
+
+                                            <input
+                                                className="mx-2 border text-center w-8 bg-transparent"
+                                                type="text"
+                                                onChange={() => {}}
+                                                value={1}
+                                            />
+
+                                            <svg
+                                                className="fill-current text-gray-600 w-3"
+                                                viewBox="0 0 448 512"
+                                            >
+                                                <path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" />
+                                            </svg>
+                                        </div>
+                                        <span className="text-center w-1/5 font-semibold text-sm">
+                                            ${product.price}
+                                        </span>
+                                        <span className="text-center w-1/5 font-semibold text-sm">
+                                            ${product.price}
+                                        </span>
+                                    </div>
+                                );
+                            })}
+                        </>
+                    )}
 
                     <a
                         href="#"
@@ -177,9 +192,25 @@ const CartPage = () => {
                     <div className="border-t mt-8">
                         <div className="flex font-semibold justify-between py-6 text-sm uppercase">
                             <span>Total cost</span>
-                            <span>$600</span>
+                            <span>
+                                {data
+                                    ? (() => {
+                                          let total = 0;
+                                          data.data.cart.products.forEach(
+                                              (product) => {
+                                                  total += product.price;
+                                              }
+                                          );
+
+                                          return total;
+                                      })()
+                                    : "$0"}
+                            </span>
                         </div>
-                        <button onClick={handleCheckout} className="bg-indigo-500 font-semibold hover:bg-indigo-600 py-3 text-sm uppercase w-full">
+                        <button
+                            onClick={handleCheckout}
+                            className="bg-indigo-500 font-semibold hover:bg-indigo-600 py-3 text-sm uppercase w-full"
+                        >
                             Checkout
                         </button>
                     </div>

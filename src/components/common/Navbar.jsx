@@ -49,7 +49,7 @@ const Navbar = () => {
     const profileLinks = [
         {
             name: "Dashboard",
-            url: "dashboard",
+            url: "/dashboard",
         },
         {
             name: "Account",
