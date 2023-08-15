@@ -5,6 +5,7 @@ const nextConfig = {
             "www.whitmorerarebooks.com",
             "res.cloudinary.com",
             "tailwindui.com",
+            "i.pravatar.cc",
         ],
     },
 };
