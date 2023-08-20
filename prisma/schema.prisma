@@ -71,6 +71,7 @@ model Address {
   address String
   city    String
   pincode String
+  state   String
   user_id String?
   user    User?   @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }

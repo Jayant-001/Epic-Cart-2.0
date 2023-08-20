@@ -8,9 +8,10 @@ const UserContext = ({ children }) => {
         name: null,
         email: null,
     });
+    const [cart, setCart] = useState(null)
 
     return (
-        <userContext.Provider value={{ user, setUser }}>
+        <userContext.Provider value={{ user, setUser, cart, setCart }}>
             {children}
         </userContext.Provider>
     );

@@ -238,7 +238,7 @@ const CartPage = () => {
                             </span>
                         </div>
                         <Link
-                            href="/"
+                            href="/account/checkout"
                             className="bg-indigo-500 font-semibold px-2 rounded shadow hover:bg-indigo-600 py-3 text-sm uppercase w-full"
                         >
                             Checkout

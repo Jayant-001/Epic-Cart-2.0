@@ -2,13 +2,11 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { toast } from "react-toastify";
 import { HiOutlineMail } from "react-icons/hi";
 import { MdLocationOn } from "react-icons/md";
 import Link from "next/link";
 
 const AccountPage = () => {
-    const [isEditMode, setIsEditMode] = useState(false);
     const [user, setUser] = useState({
         name: "user 1",
         email: "user1@gmail.com",
@@ -175,7 +173,7 @@ const AccountPage = () => {
                     <p className="text-sm opacity-80">Member since</p>
                     <span>23-06-2021</span>
                 </div>
-                <div className="w-full flex justify-around">
+                <div className="w-full flex mt-5 justify-around">
                     <button className="px-2 py-1 bg-red-500 rounded shadow hover:bg-red-400 active:bg-red-500">
                         Delete account
                     </button>
@@ -216,16 +214,12 @@ const AccountPage = () => {
                                         <img
                                             className="h-24"
                                             src="https://drive.google.com/uc?id=18KkAVkGFvaGNqPy2DIvTqmUH_nk39o3z"
-                                            alt=""
+                                            alt="product image"
                                         />
                                     </div>
                                     <div className="flex flex-col gap-3 ml-4 flex-grow">
-                                        <span className="font-bold text-sm cursor-pointer">
-                                            <Link
-                                                href={`/products/${product.id}`}
-                                            >
-                                                {product.name}
-                                            </Link>
+                                        <span className="font-bold text-sm">
+                                            {product.name}
                                         </span>
                                         <span className="text-red-500 text-xs">
                                             {product?.store?.name}
