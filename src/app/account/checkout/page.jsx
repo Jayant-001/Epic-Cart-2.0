@@ -78,24 +78,6 @@ const CheckoutPage = () => {
         stripeCheckout.mutate(items);
     };
 
-    // let [lineItems, setLineItems] = useState(null);
-    // useEffect(() => {
-    //     if (cartProducts.length > 0) {
-    //         const items = cartProducts.map((product) => ({
-    //             priceData: {
-    //                 currency: "usd",
-    //                 product_data: {
-    //                     images: [product.image],
-    //                     name: product.name,
-    //                 },
-    //                 unit_amount: product.price,
-    //             },
-    //             quantity: 1,
-    //         }));
-    //         setLineItems(items);
-    //     }
-    // }, [cartProducts]);
-
     const stripeCheckout = useMutation({
         mutationFn: async (payload) => {
             return await axios.post("/api/stripe", payload);
