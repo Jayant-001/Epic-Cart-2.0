@@ -91,7 +91,7 @@ const AddProductPage = ({ params }) => {
             toast.error("Image size limit 2 MB");
             return;
         }
-        
+
         const data = new FormData();
         data.append("file", image);
         data.append("upload_preset", "epic_store_cloud");

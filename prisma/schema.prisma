@@ -3,33 +3,33 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
 model Category {
-  id       String    @id @default(uuid())
-  name     String?   @db.VarChar(255)
+  id       String    @id @default(cuid()) @map("_id")
+  name     String?   
   products Product[]
 }
 
 model Product {
-  id          String    @id @default(uuid())
-  name        String?   @db.VarChar(255)
-  desc        String?   @db.VarChar(255)
+  id          String    @id @default(cuid()) @map("_id")
+  name        String?   
+  desc        String?   
   store_id    String?
   user_id     String?
   quantity    Int?      @default(1)
   price       Int?
-  image       String?   @db.VarChar(255)
-  address     String?   @db.VarChar(255)
+  image       String?   
+  address     String?   
   category_id String?
   store       Store?    @relation(fields: [store_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   user        User?     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   category    Category? @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  // Cart        Cart?     @relation(fields: [cartId], references: [id])
-  // cartId      String?
-  cart        Cart[]
+  Cart        Cart?     @relation(fields: [cartId], references: [id])
+  cartId      String?
+  // cart        Cart
 
   @@index([category_id], map: "category_id")
   @@index([store_id], map: "store_id")
@@ -37,9 +37,9 @@ model Product {
 }
 
 model Store {
-  id       String    @id @default(uuid())
-  name     String?   @db.VarChar(255)
-  desc     String?   @db.VarChar(255)
+  id       String    @id @default(cuid()) @map("_id")
+  name     String?   
+  desc     String?   
   user_id  String?
   products Product[]
   user     User?     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
@@ -48,10 +48,10 @@ model Store {
 }
 
 model User {
-  id       String    @id @default(uuid())
-  name     String?   @db.VarChar(255)
-  email    String?   @unique(map: "email") @db.VarChar(50)
-  password String?   @db.VarChar(255)
+  id       String    @id @default(cuid()) @map("_id")
+  name     String?   
+  email    String?   @unique(map: "email") 
+  password String?   
   products Product[]
   stores   Store[]
   cart     Cart[]
@@ -59,7 +59,7 @@ model User {
 }
 
 model Cart {
-  id       String    @id @default(uuid())
+  id       String    @id @default(cuid()) @map("_id")
   user_id  String?   @unique()
   user     User?     @relation(fields: [user_id], references: [id], onDelete: Cascade)
   products Product[]
@@ -67,7 +67,7 @@ model Cart {
 }
 
 model Address {
-  id      String  @id @default(uuid())
+  id      String  @id @default(cuid()) @map("_id")
   address String
   city    String
   pincode String
