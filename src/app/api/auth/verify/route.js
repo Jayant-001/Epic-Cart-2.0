@@ -7,7 +7,7 @@ export async function GET(req) {
         const user_id = await extractToken(req);
         if (user_id === null) {
             const response = NextResponse.json(
-                { success: false, message: "Session expired" },
+                { success: false, message: "Session not found" },
                 { status: 401 }
             );
 

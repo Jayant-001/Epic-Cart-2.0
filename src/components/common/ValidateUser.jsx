@@ -18,7 +18,7 @@ const ValidateUser = ({ children }) => {
             setCart(res.data.cart);
         },
         onError: (err) => {
-            toast.error(err.message);
+            toast.error(err.response.data.message);
             setUser({ id: null, name: null, email: null });
         },
     });

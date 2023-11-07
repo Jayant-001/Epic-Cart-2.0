@@ -82,7 +82,7 @@ const CartPage = () => {
                                 </h3>
                             </div>
 
-                            {data.data.cart.products.map((product) => {
+                            {data?.data?.cart?.products?.map((product) => {
                                 return (
                                     <div
                                         key={product.id}
@@ -173,14 +173,14 @@ const CartPage = () => {
                     </h1>
                     <div className="flex justify-between mt-10 mb-5">
                         <span className="font-semibold text-sm uppercase">
-                            Items {data ? data.data.cart.products.length : "0"}
+                            Items {data ? data?.data?.cart?.products?.length : "0"}
                         </span>
                         <span className="font-semibold text-sm">
                             $
                             {data
                                 ? (() => {
                                       let total = 0;
-                                      data.data.cart.products.forEach(
+                                      data?.data?.cart?.products.forEach(
                                           (product) => {
                                               total += product.price;
                                           }
@@ -227,7 +227,7 @@ const CartPage = () => {
                                 {data
                                     ? (() => {
                                           let total = 0;
-                                          data.data.cart.products.forEach(
+                                          data?.data?.cart?.products.forEach(
                                               (product) => {
                                                   total += product.price;
                                               }
